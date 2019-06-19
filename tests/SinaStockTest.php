@@ -65,7 +65,7 @@ class SinaStockTest extends TestCase
     public function testGetInfo()
     {
         $s = new SinaStock();
-        $this->assertIsArray($s->getInfo('600027'));
+        $this->assertTrue(is_array($s->getInfo('600027')));
     }
 
     public function testGetInfosWithInvalidCodes()
@@ -100,24 +100,24 @@ class SinaStockTest extends TestCase
     public function testGetKlineImg()
     {
         $s = new SinaStock();
-        $this->assertIsString($s->getKlineImg('600027'));
+        $this->assertTrue(is_string($s->getKlineImg('600027')));
     }
 
     public function testGetKlineImgWeekly()
     {
         $s = new SinaStock();
-        $this->assertIsString($s->getKlineImgWeekly('600027'));
+        $this->assertTrue(is_string($s->getKlineImgWeekly('600027')));
     }
 
     public function testGetKlineImgMonthly()
     {
         $s = new SinaStock();
-        $this->assertIsString($s->getKlineImgMonthly('600027'));
+        $this->assertTrue(is_string($s->getKlineImgMonthly('600027')));
     }
 
     public function testGetTrendImg()
     {
         $s = new SinaStock();
-        $this->assertIsString($s->getTrendImg('600027'));
+        $this->assertTrue(is_string($s->getTrendImg('600027')));
     }
 }

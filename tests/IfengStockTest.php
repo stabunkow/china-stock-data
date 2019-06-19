@@ -66,7 +66,7 @@ class IfengStockTest extends TestCase
     public function testGetInfo()
     {
         $s = new IfengStock();
-        $this->assertIsArray($s->getInfo('600027'));
+        $this->assertTrue(is_array($s->getInfo('600027')));
     }
 
     public function testGetInfosWithInvalidCodes()
@@ -101,24 +101,24 @@ class IfengStockTest extends TestCase
     public function testGetKlineData()
     {
         $s = new IfengStock();
-        $this->assertIsArray($s->getKlineData('600027'));
+        $this->assertTrue(is_array($s->getKlineData('600027')));
     }
 
     public function testGetTrendData()
     {
         $s = new IfengStock();
-        $this->assertIsArray($s->getTrendData('600027'));
+        $this->assertTrue(is_array($s->getTrendData('600027')));
     }
 
     public function testGetKlineImg()
     {
         $s = new IfengStock();
-        $this->assertIsString($s->getKlineImg('600027'));
+        $this->assertTrue(is_string($s->getKlineImg('600027')));
     }
 
     public function testGetTrendImg()
     {
         $s = new IfengStock();
-        $this->assertIsString($s->getTrendImg('600027'));
+        $this->assertTrue(is_string($s->getTrendImg('600027')));
     }
 }
