@@ -1,5 +1,9 @@
 <h1 align="center"> china-stock-data </h1>
 
+[![Build Status](https://travis-ci.org/stabunkow/china-stock-data.svg?branch=master)](https://travis-ci.org/stabunkow/china-stock-data)
+![StyleCI build status](https://github.styleci.io/repos/192670611/shield) 
+
+
 <p align="center"> 提供国内财经门户网站股票相关数据，目前有新浪和凤凰网的数据</p>
 
 
