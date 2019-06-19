@@ -1,0 +1,21 @@
+{
+    "name": "stabunkow/china-stock-data",
+    "description": "Package description here.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "stabunkow",
+            "email": "stabunkow@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "phpunit/phpunit": "^7.5",
+        "mockery/mockery": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stabunkow\\ChinaStockData\\": "./src"
+        }
+    }
+}
