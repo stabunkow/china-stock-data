@@ -1,6 +1,6 @@
 {
     "name": "stabunkow/china-stock-data",
-    "description": "Package description here.",
+    "description": "提供国内财经门户网站股票相关数据，目前有新浪和凤凰网的数据",
     "license": "MIT",
     "authors": [
         {
