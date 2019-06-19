@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the stabunkow/china-stock-data.
+ *
+ * (c) stabunkow<stabunkow@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Stabunkow\ChinaStockData\Sources;
 
@@ -12,8 +20,10 @@ class IfengStock
     use Clientable;
 
     /**
-     * 获取股指
+     * 获取股指.
+     *
      * @return array
+     *
      * @throws HttpException
      * @throws InvalidArgumentException
      * @throws TransformationException
@@ -26,17 +36,20 @@ class IfengStock
     }
 
     /**
-     * 获取股票信息
+     * 获取股票信息.
+     *
      * @param $code
+     *
      * @return array
+     *
      * @throws HttpException
      * @throws InvalidArgumentException
      * @throws TransformationException
      */
     public function getInfo($code)
     {
-        if (! $this->pregCode($code)) {
-            throw new InvalidArgumentException('Invalid code format: ' . $code);
+        if (!$this->pregCode($code)) {
+            throw new InvalidArgumentException('Invalid code format: '.$code);
         }
 
         $reqCode = $this->formatCode($code);
@@ -51,6 +64,7 @@ class IfengStock
         try {
             $data = $this->transformResponse($response);
             $raw = $data[0];
+
             return $this->transformInfo($code, $raw);
         } catch (\Exception $e) {
             throw new TransformationException("Data transformation failed, stock {$code} may be closed or not exists.", $e->getCode(), $e);
@@ -58,35 +72,39 @@ class IfengStock
     }
 
     /**
-     * 获取批量股票信息
+     * 获取批量股票信息.
+     *
      * @param $codes
+     *
      * @return array
+     *
      * @throws HttpException
      * @throws InvalidArgumentException
      * @throws TransformationException
      */
     public function getInfos($codes)
     {
-        if (! is_array($codes)) {
+        if (!is_array($codes)) {
             throw new InvalidArgumentException('Codes must be array.');
         }
 
-        if (sizeof($codes) < 1) {
+        if (count($codes) < 1) {
             throw new InvalidArgumentException('Codes size must be at least 1.');
         }
 
         foreach ($codes as $code) {
-            if (! $this->pregCode($code)) {
-                throw new InvalidArgumentException('Invalid code format: ' . $code);
+            if (!$this->pregCode($code)) {
+                throw new InvalidArgumentException('Invalid code format: '.$code);
             }
         }
 
         $q = '';
         foreach ($codes as $code) {
-            $q .=  "{$this->formatCode($code)},";
+            $q .= "{$this->formatCode($code)},";
         }
 
         $url = "http://hq.finance.ifeng.com/q.php?l=$q";
+
         try {
             $response = $this->getHttpClient()->get($url)->getBody()->getContents();
         } catch (\Exception $e) {
@@ -97,7 +115,7 @@ class IfengStock
             $data = $this->transformResponse($response);
 
             $infos = [];
-            for ($i = 0; $i < count($data); $i++) {
+            for ($i = 0; $i < count($data); ++$i) {
                 $infos[] = $this->transformInfo($code, $data[$i]);
             }
 
@@ -108,20 +126,23 @@ class IfengStock
     }
 
     /**
-     * 获取股票K线数据
+     * 获取股票K线数据.
+     *
      * @param $code
+     *
      * @return array
+     *
      * @throws HttpException
      * @throws InvalidArgumentException
      * @throws TransformationException
      */
     public function getKlineData($code)
     {
-        if (! $this->pregCode($code)) {
-            throw new InvalidArgumentException('Invalid code format: ' . $code);
+        if (!$this->pregCode($code)) {
+            throw new InvalidArgumentException('Invalid code format: '.$code);
         }
 
-        $url = 'http://api.finance.ifeng.com/akdaily/?type=last&code=' . $this->formatCode($code);
+        $url = 'http://api.finance.ifeng.com/akdaily/?type=last&code='.$this->formatCode($code);
 
         try {
             $response = $this->getHttpClient()->get($url)->getBody()->getContents();
@@ -131,7 +152,8 @@ class IfengStock
 
         try {
             $data = $this->transformRecordResponse($response);
-            return array_map(function($raw) {
+
+            return array_map(function ($raw) {
                 return $this->transformRecordInfo($raw);
             }, $data);
         } catch (\Exception $e) {
@@ -140,20 +162,23 @@ class IfengStock
     }
 
     /**
-     * 获取股票分时数据
+     * 获取股票分时数据.
+     *
      * @param $code
+     *
      * @return array
+     *
      * @throws HttpException
      * @throws InvalidArgumentException
      * @throws TransformationException
      */
     public function getTrendData($code)
     {
-        if (! $this->pregCode($code)) {
-            throw new InvalidArgumentException('Invalid code format: ' . $code);
+        if (!$this->pregCode($code)) {
+            throw new InvalidArgumentException('Invalid code format: '.$code);
         }
 
-        $url = 'http://api.finance.ifeng.com/akmin?type=5&scode=' . $this->formatCode($code);
+        $url = 'http://api.finance.ifeng.com/akmin?type=5&scode='.$this->formatCode($code);
 
         try {
             $response = $this->getHttpClient()->get($url)->getBody()->getContents();
@@ -164,7 +189,7 @@ class IfengStock
         try {
             $data = $this->transformRecordResponse($response);
 
-            return array_map(function($raw) {
+            return array_map(function ($raw) {
                 return $this->transformRecordInfo($raw);
             }, $data);
         } catch (\Exception $e) {
@@ -173,47 +198,59 @@ class IfengStock
     }
 
     /**
-     * 获取股票K线图
+     * 获取股票K线图.
+     *
      * @param $code
+     *
      * @return string
      */
     public function getKlineImg($code)
     {
-        if (! $this->pregCode($code)) {
-            throw new InvalidArgumentException('Invalid code format: ' . $code);
+        if (!$this->pregCode($code)) {
+            throw new InvalidArgumentException('Invalid code format: '.$code);
         }
-        return "http://img.finance.ifeng.com/chart/kline/{$this->formatCode($code)}.gif?" . rand(1, 100000000);
+
+        return "http://img.finance.ifeng.com/chart/kline/{$this->formatCode($code)}.gif?".rand(1, 100000000);
     }
 
     /**
-     * 获取股票分时图
+     * 获取股票分时图.
+     *
      * @param $code
+     *
      * @return string
+     *
      * @throws InvalidArgumentException
      */
     public function getTrendImg($code)
     {
-        if (! $this->pregCode($code)) {
-            throw new InvalidArgumentException('Invalid code format: ' . $code);
+        if (!$this->pregCode($code)) {
+            throw new InvalidArgumentException('Invalid code format: '.$code);
         }
-        return "http://img.finance.ifeng.com/chart/min/{$this->formatCode($code)}.gif?" . rand(1, 100000000);
+
+        return "http://img.finance.ifeng.com/chart/min/{$this->formatCode($code)}.gif?".rand(1, 100000000);
     }
 
     /**
      * 股票代码格式验证
+     *
      * @param $code
+     *
      * @return false|int
      */
     protected function pregCode($code)
     {
         $pattern = '/^[0|3|6]\d{5}/';
+
         return preg_match($pattern, $code);
     }
 
     /**
-     * 翻译获得的股票信息
+     * 翻译获得的股票信息.
+     *
      * @param $code
      * @param $raw
+     *
      * @return array
      */
     protected function transformInfo($code, $raw)
@@ -262,19 +299,24 @@ class IfengStock
     }
 
     /**
-     * 对获取数据进行初步转化
+     * 对获取数据进行初步转化.
+     *
      * @param $response
+     *
      * @return array
      */
     protected function transformResponse($response)
     {
         $data = substr($response, 11, -3);
+
         return array_values(json_decode($data, true));
     }
 
     /**
-     * 对股票图表数据进行转换
+     * 对股票图表数据进行转换.
+     *
      * @param $response
+     *
      * @return mixed
      */
     protected function transformRecordResponse($response)
@@ -283,8 +325,10 @@ class IfengStock
     }
 
     /**
-     * 翻译股票图表数据
+     * 翻译股票图表数据.
+     *
      * @param $raw
+     *
      * @return array
      */
     protected function transformRecordInfo($raw)
@@ -295,13 +339,15 @@ class IfengStock
             'close_px' => $raw[3],
             'high_px' => $raw[2],
             'low_px' => $raw[4],
-            'volume' => $raw[5]
+            'volume' => $raw[5],
         ];
     }
 
     /**
-     * 转换请求股票参数
+     * 转换请求股票参数.
+     *
      * @param $code
+     *
      * @return string
      */
     protected function formatCode($code)
